@@ -1,0 +1,16 @@
+{
+  "displayName": "sycobench-gemini-batch-20250611_180531",
+  "model": "publishers/google/models/gemini-1.5-flash-002",
+  "inputConfig": {
+    "instancesFormat": "jsonl",
+    "gcsSource": {
+      "uris": ["gs://pythea-sycobench-1749689243/sycobench/input/gemini_batch_1000.jsonl"]
+    }
+  },
+  "outputConfig": {
+    "predictionsFormat": "jsonl",
+    "gcsDestination": {
+      "outputUriPrefix": "gs://pythea-sycobench-1749689243/sycobench/output/20250611_180531/"
+    }
+  }
+}

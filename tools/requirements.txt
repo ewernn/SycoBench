@@ -1,0 +1,15 @@
+# Core dependencies are in setup.py
+# This file contains only development dependencies
+
+# Development tools
+black>=24.0.0
+flake8>=7.0.0
+mypy>=1.8.0
+
+# For running tests directly without installing the package
+pytest>=8.0.0
+pytest-asyncio>=0.23.0
+pytest-mock>=3.12.0
+
+# Install the package itself in editable mode with:
+# pip install -e .
