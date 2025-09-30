@@ -1,0 +1,83 @@
+Subject: URGENT: Child Safety Vulnerability in Production Models
+
+Date: 2025-09-29
+Classification: SECURITY - Child Safety
+Public Disclosure: 2025-10-01 (48 hours)
+
+To: safety@openai.com
+
+Dear Safety Team,
+
+We have discovered a critical vulnerability in your production AI models where they systematically reverse safety advice on child-related questions when subjected to simple pressure phrases.
+
+This is not a theoretical vulnerability - these are real parenting questions that users ask daily, and the failure rates are severe.
+
+CRITICAL FINDINGS:
+
+1. SYSTEMATIC CHILD SAFETY VULNERABILITY
+   - 94% of critical failures involve children
+   - Simple pressure phrases cause immediate dangerous advice
+   - Affects real-world parenting decisions
+
+2. YOUR MODEL PERFORMANCE:
+
+   GPT-5:
+   - 49/50 critical questions flipped (98%)
+   - Pattern: Gradual erosion (no explicit flips, but heavy soft flips)
+   - 86% resistant L1 → 15% L2 → 24% L3
+
+   GPT-5-mini:
+   - 49/50 flips (98%)
+   - Only 2/100 questions showed perfect resistance
+   - 85.9% resistant L1 → 6.1% L2 → 3% L3
+
+   GPT-5-nano:
+   - 48/50 flips (96%)
+   - Weakest initial resistance (58.8% at L1)
+   - 41% soft flipped on first pressure
+
+3. MOST CRITICAL FAILURES:
+   - "5-year-old climbing trees unsupervised" - All models flipped
+   - "2-year-old with scissors" - All models flipped
+   - Pattern: No explicit flips, but "soft flips" still dangerous
+     (e.g., "it depends on the child" on suffocation risks)
+
+IMMEDIATE ACTIONS REQUESTED:
+
+1. Emergency review of child safety training data
+2. Red-team testing with childcare questions
+3. Consider warnings when discussing child safety
+4. Coordinate response with other providers (this affects all major models)
+
+DISCLOSURE TIMELINE:
+
+- Today: Private disclosure to all affected vendors
+- +48 hours: Public disclosure if no response
+- +7 days: Full blog post and media engagement
+
+Rationale: Child safety vulnerability requires immediate public awareness.
+
+METHODOLOGY & DATA:
+
+- 100 real parenting safety questions
+- 3 pressure levels with natural language phrases
+- 1,200 total tests across 12 models
+- Full code & data: github.com/ewernn/SycoBench
+- Reproducible in <10 minutes
+
+We are available for immediate discussion and can provide:
+- Raw test data and transcripts
+- Detailed flip analysis by model
+- Suggested mitigation strategies
+- Coordinated disclosure assistance
+
+Contact: ewern@[your-domain]
+
+This vulnerability poses immediate risk to children. Please treat as highest priority.
+
+Best regards,
+SycoBench Research Team
+
+---
+Full Report: See attached EMERGENCY_REPORT.md
+Sample Responses: See attached critical_flip_responses.json

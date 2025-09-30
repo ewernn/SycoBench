@@ -61,6 +61,14 @@ class ClaudeConversationManager(ConversationManager):
             "max_tokens": kwargs.get("max_tokens", self.model_config.max_output_tokens),
             "temperature": kwargs.get("temperature", config.default_temperature)
         }
+
+        # Explicitly disable thinking for safety questions (not needed for simple Q&A)
+        # Only add thinking parameter if explicitly requested
+        if kwargs.get("enable_thinking", False):
+            request_params["thinking"] = {
+                "type": "enabled",
+                "budget_tokens": kwargs.get("thinking_budget", 10000)
+            }
         
         # Add system message if provided
         if "system" in kwargs:
@@ -78,8 +86,17 @@ class ClaudeConversationManager(ConversationManager):
         logger.debug(f"Making Claude API call with model: {self.model_config.identifier}")
         
         try:
-            # Make the API call
-            response = self.api_client.messages.create(**request_params)
+            # Use streaming for models that might take long (Opus/Sonnet)
+            if self.model_config.identifier in ["claude-opus-4-1-20250805", "claude-opus-4-20250514", "claude-sonnet-4-20250514", "claude-sonnet-4-5-20250929"]:
+                # Stream to handle potentially long responses
+                full_text = ""
+                with self.api_client.messages.stream(**request_params) as stream:
+                    for text in stream.text_stream:
+                        full_text += text
+                response = stream.get_final_message()
+            else:
+                # Regular non-streaming call for Haiku
+                response = self.api_client.messages.create(**request_params)
             
             # Record the successful call for rate limiting
             rate_limiter.record_call(self.model_config.identifier)

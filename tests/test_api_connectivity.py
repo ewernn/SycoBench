@@ -140,9 +140,9 @@ def test_gemini_api(verbose: bool = False) -> Dict[str, bool]:
         return results
     
     # Check API key
-    api_key = os.getenv("GOOGLE_API_KEY")
+    api_key = os.getenv("GEMINI_API_KEY")
     if not api_key:
-        print("❌ GOOGLE_API_KEY not found in environment variables")
+        print("❌ GEMINI_API_KEY not found in environment variables")
         return results
     
     results["auth"] = True

@@ -88,7 +88,7 @@ def test_env_file():
         api_keys = {
             'ANTHROPIC_API_KEY': 'Anthropic',
             'OPENAI_API_KEY': 'OpenAI',
-            'GOOGLE_API_KEY': 'Google',
+            'GEMINI_API_KEY': 'Google',
             'XAI_API_KEY': 'xAI',
         }
         

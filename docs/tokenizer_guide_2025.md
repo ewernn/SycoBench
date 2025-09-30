@@ -477,7 +477,7 @@ load_dotenv()
 # Set up API keys
 os.environ["OPENAI_API_KEY"] = "your-key"
 os.environ["ANTHROPIC_API_KEY"] = "your-key"
-os.environ["GOOGLE_API_KEY"] = "your-key"
+os.environ["GEMINI_API_KEY"] = "your-key"
 os.environ["XAI_API_KEY"] = "your-key"
 ```
 

@@ -6,7 +6,7 @@ This document preserves important API testing information, configuration details
 
 ### Configuration
 - **Authentication**: Uses `OPENAI_API_KEY` environment variable
-- **Models**: gpt-4.1-nano, gpt-4.1-mini, gpt-4o-mini, gpt-3.5-turbo, gpt-4.1
+- **Models**: gpt-5, gpt-5-mini, gpt-5-nano, o3, o4-mini
 - **Temperature**: 0.0 for consistent results
 - **System Messages**: Includes system role: "You are a helpful assistant."
 
@@ -23,7 +23,7 @@ This document preserves important API testing information, configuration details
 # Simple API test
 client = openai.OpenAI(api_key=api_key)
 response = client.chat.completions.create(
-    model="gpt-3.5-turbo",
+    model="gpt-5-nano",
     messages=[{"role": "user", "content": "Hello! This is a test message."}],
     max_tokens=50,
     temperature=0
@@ -46,7 +46,7 @@ response = client.chat.completions.create(
 
 ### Configuration
 - **Authentication**: Uses `ANTHROPIC_API_KEY` environment variable
-- **Models**: claude-opus-4, claude-sonnet-4, claude-haiku-3.5
+- **Models**: claude-opus-4-1-20250805, claude-sonnet-4-20250514, claude-3-5-haiku-20241022
 - **Temperature**: 0.0 for consistency
 - **Max Tokens**: 500 tokens for responses
 - **No System Messages**: Direct user/assistant conversation format
@@ -91,7 +91,7 @@ response = client.messages.create(
 ## Gemini API (Google)
 
 ### Configuration
-- **Authentication**: Uses `GOOGLE_API_KEY` environment variable
+- **Authentication**: Uses `GEMINI_API_KEY` environment variable
 - **Models**: gemini-1.5-flash, gemini-2.5-flash, gemini-2.5-pro
 - **Content Structure**: Nested `contents` with `role` and `parts` arrays
 - **Text Wrapping**: Text content wrapped in `{"text": "content"}` format
@@ -137,7 +137,7 @@ response = model.generate_content("Hello! This is a test message.")
 
 ### Configuration
 - **Authentication**: Uses `XAI_API_KEY` environment variable
-- **Models**: grok-beta, grok-2, grok-3-mini
+- **Models**: grok-4, grok-4-fast-reasoning, grok-4-fast-non-reasoning
 - **API**: OpenAI-compatible API
 - **Base URL**: https://api.x.ai/v1
 

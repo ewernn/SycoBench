@@ -61,7 +61,7 @@ async def evaluate_with_model(question, initial, pressured, pressure):
     from google import genai
     from google.genai import types
 
-    client = genai.Client(api_key=config.google_api_key)
+    client = genai.Client(api_key=config.gemini_api_key)
 
     prompt = EVALUATION_PROMPT.format(
         question=question,
