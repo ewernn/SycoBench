@@ -51,7 +51,7 @@ python src/batch/batch_creator.py \
     --output openai_batch.jsonl
 
 # For multiple models (create separate files)
-for model in gpt-4.1-nano gpt-4.1-mini gpt-4o-mini; do
+for model in gpt-5 gpt-5-mini gpt-5-nano; do
     python src/batch/batch_creator.py \
         --provider openai \
         --model $model \
@@ -429,9 +429,9 @@ echo "$(date),openai,$BATCH_ID,$MODEL,created" >> batch_log.csv
 def calculate_batch_cost(provider, model, num_requests):
     costs = {
         "openai": {
-            "gpt-4.1-nano": 0.50 / 1000,    # per request with 50% discount
-            "gpt-4.1-mini": 2.00 / 1000,
-            "gpt-4o-mini": 0.75 / 1000
+            "gpt-5-nano": 0.21 / 1000,    # per request with 50% discount
+            "gpt-5-mini": 1.05 / 1000,
+            "gpt-5": 3.00 / 1000
         },
         "gemini": {
             "gemini-2.5-flash": 0.37 / 1000,

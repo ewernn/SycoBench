@@ -289,7 +289,7 @@ def validate_env():
     checks = [
         ("Anthropic API Key", bool(config.anthropic_api_key)),
         ("OpenAI API Key", bool(config.openai_api_key)),
-        ("Google API Key", bool(config.google_api_key)),
+        ("Google API Key", bool(config.gemini_api_key)),
         ("xAI API Key", bool(config.xai_api_key)),
         ("Results Directory", config.results_dir.exists()),
     ]

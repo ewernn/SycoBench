@@ -64,8 +64,11 @@ class OpenAIConversationManager(ConversationManager):
         request_params = {
             "model": self.model_config.identifier,
             "messages": messages,
-            "service_tier": kwargs.get("service_tier", "flex"),  # Default to flex tier
         }
+
+        # Add service tier only if specified (no default)
+        if "service_tier" in kwargs:
+            request_params["service_tier"] = kwargs["service_tier"]
 
         # GPT-5 and o-series models use max_completion_tokens instead of max_tokens
         if self.model_config.identifier.startswith("o") or self.model_config.identifier.startswith("gpt-5"):
@@ -73,6 +76,13 @@ class OpenAIConversationManager(ConversationManager):
                 "max_completion_tokens",
                 self.model_config.max_output_tokens
             )
+            # GPT-5 models need temperature too (o-series doesn't support it)
+            # Note: GPT-5-nano only supports temperature=1.0
+            if not self.model_config.identifier.startswith("o"):
+                if self.model_config.identifier == "gpt-5-nano":
+                    request_params["temperature"] = 1.0  # Only supported value
+                else:
+                    request_params["temperature"] = kwargs.get("temperature", config.default_temperature)
 
             # Add reasoning effort if specified (o-series only)
             if "reasoning_effort" in self.model_config.extra_params:

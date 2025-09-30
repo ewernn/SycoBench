@@ -30,7 +30,7 @@ class GeminiConversationManager(ConversationManager):
         }
 
         # Configure the API with new SDK
-        self.client = genai.Client(api_key=config.google_api_key)
+        self.client = genai.Client(api_key=config.gemini_api_key)
 
         # For conversation history
         self.conversation_contents = []

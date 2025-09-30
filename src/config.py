@@ -29,7 +29,7 @@ class SycoBenchConfig:
     # API Keys
     anthropic_api_key: str = field(default_factory=lambda: os.getenv("ANTHROPIC_API_KEY", ""))
     openai_api_key: str = field(default_factory=lambda: os.getenv("OPENAI_API_KEY", ""))
-    google_api_key: str = field(default_factory=lambda: os.getenv("GOOGLE_API_KEY", ""))
+    gemini_api_key: str = field(default_factory=lambda: os.getenv("GEMINI_API_KEY", ""))
     xai_api_key: str = field(default_factory=lambda: os.getenv("XAI_API_KEY", ""))
     
     # AWS Bedrock (optional)
@@ -74,8 +74,8 @@ class SycoBenchConfig:
 MODEL_CONFIGS = {
     # Anthropic Claude
     "claude-opus-4": ModelConfig(
-        name="Claude Opus 4",
-        identifier="claude-opus-4-20250514",
+        name="Claude Opus 4.1",
+        identifier="claude-opus-4-1-20250805",
         context_window=200000,
         max_output_tokens=32000,
         supports_thinking=True,
@@ -83,9 +83,9 @@ MODEL_CONFIGS = {
         cost_per_1m_input=15.0,
         cost_per_1m_output=75.0
     ),
-    "claude-sonnet-4": ModelConfig(
-        name="Claude Sonnet 4",
-        identifier="claude-sonnet-4-20241229",
+    "claude-sonnet-4.5": ModelConfig(
+        name="Claude Sonnet 4.5",
+        identifier="claude-sonnet-4-5-20250929",
         context_window=200000,
         max_output_tokens=64000,
         supports_thinking=True,
@@ -100,8 +100,8 @@ MODEL_CONFIGS = {
         max_output_tokens=4096,
         supports_thinking=False,
         rate_limit_rpm=50,
-        cost_per_1m_input=0.25,
-        cost_per_1m_output=1.25
+        cost_per_1m_input=0.80,
+        cost_per_1m_output=4.0
     ),
     "claude-sonnet-3.5": ModelConfig(
         name="Claude Sonnet 3.5",
@@ -181,8 +181,8 @@ MODEL_CONFIGS = {
         max_output_tokens=16384,
         supports_thinking=False,
         rate_limit_rpm=10,
-        cost_per_1m_input=0.625,
-        cost_per_1m_output=5.0
+        cost_per_1m_input=1.25,
+        cost_per_1m_output=10.0
     ),
     "gpt-5-mini": ModelConfig(
         name="GPT-5-mini",
@@ -191,8 +191,8 @@ MODEL_CONFIGS = {
         max_output_tokens=16384,
         supports_thinking=False,
         rate_limit_rpm=10,
-        cost_per_1m_input=0.125,
-        cost_per_1m_output=1.0
+        cost_per_1m_input=0.25,
+        cost_per_1m_output=2.0
     ),
     "gpt-5-nano": ModelConfig(
         name="GPT-5-nano",
@@ -201,8 +201,8 @@ MODEL_CONFIGS = {
         max_output_tokens=16384,
         supports_thinking=False,
         rate_limit_rpm=10,
-        cost_per_1m_input=0.025,
-        cost_per_1m_output=0.20
+        cost_per_1m_input=0.05,
+        cost_per_1m_output=0.40
     ),
     
     # OpenAI O-series (Reasoning models)
@@ -232,6 +232,16 @@ MODEL_CONFIGS = {
     ),
     
     # xAI Grok
+    "grok-4": ModelConfig(
+        name="Grok 4",
+        identifier="grok-4",
+        context_window=2000000,
+        max_output_tokens=8192,
+        supports_thinking=False,
+        rate_limit_rpm=60,
+        cost_per_1m_input=3.0,
+        cost_per_1m_output=15.0
+    ),
     "grok-4-fast-reasoning": ModelConfig(
         name="Grok 4 Fast Reasoning",
         identifier="grok-4-fast-reasoning",

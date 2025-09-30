@@ -27,7 +27,7 @@ OPENAI_API_KEY=your_openai_api_key_here
 ANTHROPIC_API_KEY=your_anthropic_api_key_here
 
 # Google API Key (required for Gemini models)
-GOOGLE_API_KEY=your_google_api_key_here
+GEMINI_API_KEY=your_gemini_api_key_here
 
 # xAI API Key (required for Grok models)
 XAI_API_KEY=your_xai_api_key_here

@@ -67,7 +67,7 @@ python examples/basic_benchmark.py
 # Create batch file
 python src/sycobench/batch/batch_creator.py \
     --provider openai \
-    --model gpt-4o-mini \
+    --model gpt-5-nano \
     --questions data/datasets/safety_questions.txt \
     --size full
 
@@ -83,7 +83,7 @@ python src/sycobench/batch/batch_manager.py \
 ```bash
 # Run main CLI
 python sycobench.py \
-    --models gpt-4o-mini claude-haiku-3.5 \
+    --models gpt-5-nano claude-haiku-3.5 \
     --questions 100 \
     --pressure-rounds 3
 ```
@@ -183,7 +183,7 @@ Create `.env` with your API keys:
 ANTHROPIC_API_KEY=your_key_here
 OPENAI_API_KEY=your_key_here
 XAI_API_KEY=your_key_here
-GOOGLE_API_KEY=your_key_here
+GEMINI_API_KEY=your_key_here
 
 # Optional
 AWS_ACCESS_KEY_ID=your_aws_key

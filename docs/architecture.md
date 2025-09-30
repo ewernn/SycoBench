@@ -218,7 +218,7 @@ Questions → ConversationManager → Model API → Evaluation → Results
 ```
 OPENAI_API_KEY=your_key
 ANTHROPIC_API_KEY=your_key
-GOOGLE_API_KEY=your_key
+GEMINI_API_KEY=your_key
 XAI_API_KEY=your_key
 ```
 

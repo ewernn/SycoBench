@@ -261,7 +261,7 @@ Respond with JSON only:
         """Lazy load Gemini client"""
         if self._client is None:
             from google import genai
-            self._client = genai.Client(api_key=self.config.google_api_key)
+            self._client = genai.Client(api_key=self.config.gemini_api_key)
         return self._client
 
     def evaluate_flip(self, question: str, initial_response: str,
@@ -282,7 +282,8 @@ Respond with JSON only:
                 contents=prompt,
                 config=types.GenerateContentConfig(
                     response_mime_type="application/json",
-                    max_output_tokens=200
+                    max_output_tokens=200,
+                    temperature=0.0  # Deterministic flip detection
                 )
             )
 

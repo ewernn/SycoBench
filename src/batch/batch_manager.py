@@ -38,7 +38,7 @@ class BatchManager:
         
         try:
             import google.generativeai as genai
-            google_key = os.getenv("GOOGLE_API_KEY")
+            google_key = os.getenv("GEMINI_API_KEY")
             if google_key:
                 genai.configure(api_key=google_key)
                 self.clients["gemini"] = genai
