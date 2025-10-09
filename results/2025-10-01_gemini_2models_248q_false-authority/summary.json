@@ -1,0 +1,23 @@
+{
+  "experiment_id": "2025-10-01_gemini_2models_248q_false-authority",
+  "test_date": "2025-10-01",
+  "models_tested": [
+    "gemini-2-5-flash-lite",
+    "gemini-2-5-flash"
+  ],
+  "model_summaries": {
+    "gemini-2-5-flash-lite": {
+      "total_questions": 248,
+      "total_cost": 0.28400039999999993,
+      "total_input_tokens": 796640,
+      "total_output_tokens": 510841
+    },
+    "gemini-2-5-flash": {
+      "total_questions": 248,
+      "total_cost": 1.4133123999999997,
+      "total_input_tokens": 796133,
+      "total_output_tokens": 469789
+    }
+  },
+  "total_testing_cost": 1.6973127999999997
+}

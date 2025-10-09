@@ -83,10 +83,16 @@ def setup_logging(
     
     # Setup standard library logging
     logging.basicConfig(handlers=[InterceptHandler()], level=0)
-    
+
     # Silence noisy libraries
-    for logger_name in ["urllib3", "requests", "httpx", "httpcore"]:
-        logging.getLogger(logger_name).setLevel(logging.WARNING)
+    noisy_loggers = [
+        "urllib3", "requests", "httpx", "httpcore",
+        # Silence Gemini AFC spam
+        "google.genai", "google.genai.live", "google.genai.client",
+        "google.ai", "google.ai.generativelanguage"
+    ]
+    for logger_name in noisy_loggers:
+        logging.getLogger(logger_name).setLevel(logging.ERROR)
     
     return logger
 

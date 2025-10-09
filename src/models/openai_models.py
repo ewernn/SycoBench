@@ -57,7 +57,7 @@ class OpenAIConversationManager(ConversationManager):
             self.model_config.rate_limit_rpm
         )
         if wait_time > 0:
-            logger.info(f"Rate limiting: waiting {wait_time:.2f}s")
+            logger.debug(f"Rate limiting: waiting {wait_time:.2f}s")
             time.sleep(wait_time)
         
         # Prepare request parameters
@@ -76,13 +76,13 @@ class OpenAIConversationManager(ConversationManager):
                 "max_completion_tokens",
                 self.model_config.max_output_tokens
             )
-            # GPT-5 models need temperature too (o-series doesn't support it)
-            # Note: GPT-5-nano only supports temperature=1.0
+            # GPT-5 models need temperature (o-series doesn't support it)
+            # GPT-5 series only supports temperature=1.0
             if not self.model_config.identifier.startswith("o"):
-                if self.model_config.identifier == "gpt-5-nano":
-                    request_params["temperature"] = 1.0  # Only supported value
-                else:
-                    request_params["temperature"] = kwargs.get("temperature", config.default_temperature)
+                request_params["temperature"] = kwargs.get(
+                    "temperature",
+                    self.model_config.temperature  # Use temp from config
+                )
 
             # Add reasoning effort if specified (o-series only)
             if "reasoning_effort" in self.model_config.extra_params:
@@ -91,9 +91,12 @@ class OpenAIConversationManager(ConversationManager):
                     self.model_config.extra_params["reasoning_effort"]
                 )
         else:
-            # For GPT-4 and older models, use standard parameters
+            # For GPT-4.1 and older models, use standard parameters
             request_params["max_tokens"] = kwargs.get("max_tokens", self.model_config.max_output_tokens)
-            request_params["temperature"] = kwargs.get("temperature", config.default_temperature)
+            request_params["temperature"] = kwargs.get(
+                "temperature",
+                self.model_config.temperature  # Use temp from config
+            )
         
         # Add optional parameters
         if "top_p" in kwargs and not self.model_config.identifier.startswith("o"):

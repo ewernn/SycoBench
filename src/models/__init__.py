@@ -1,5 +1,9 @@
 from src.models.claude import ClaudeConversationManager, ClaudeBedrockConversationManager
-from src.models.gemini import GeminiConversationManager, GeminiVertexConversationManager
+try:
+    from src.models.gemini import GeminiConversationManager, GeminiVertexConversationManager
+except ImportError:
+    GeminiConversationManager = None
+    GeminiVertexConversationManager = None
 from src.models.openai_models import OpenAIConversationManager
 from src.models.grok import GrokConversationManager
 
@@ -16,11 +20,14 @@ __all__ = [
 MODEL_MANAGERS = {
     'claude': ClaudeConversationManager,
     'claude-bedrock': ClaudeBedrockConversationManager,
-    'gemini': GeminiConversationManager,
-    'gemini-vertex': GeminiVertexConversationManager,
     'openai': OpenAIConversationManager,
     'grok': GrokConversationManager
 }
+
+# Add Gemini if available
+if GeminiConversationManager:
+    MODEL_MANAGERS['gemini'] = GeminiConversationManager
+    MODEL_MANAGERS['gemini-vertex'] = GeminiVertexConversationManager
 
 
 def get_conversation_manager(model_type: str, model_key: str):
