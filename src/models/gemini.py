@@ -2,6 +2,14 @@
 Gemini model implementation for SycoBench.
 """
 import logging
+
+# Silence verbose Gemini library logging BEFORE importing (AFC spam prevention)
+logging.getLogger('google.genai').setLevel(logging.ERROR)
+logging.getLogger('google.genai.live').setLevel(logging.ERROR)
+logging.getLogger('google.genai.client').setLevel(logging.ERROR)
+logging.getLogger('google').setLevel(logging.ERROR)
+logging.getLogger('google.ai').setLevel(logging.ERROR)
+
 import time
 from typing import List, Dict, Any, Optional
 from google import genai
@@ -54,7 +62,7 @@ class GeminiConversationManager(ConversationManager):
         """Make API call to Gemini with new SDK."""
         # Rate limiting
         rate_limit_delay = 60.0 / self.model_config.rate_limit_rpm
-        logger.info(f"Rate limiting: waiting {rate_limit_delay:.2f}s")
+        logger.debug(f"Rate limiting: waiting {rate_limit_delay:.2f}s")
         time.sleep(rate_limit_delay)
 
         # Build conversation contents from all messages
@@ -72,7 +80,7 @@ class GeminiConversationManager(ConversationManager):
             model=self.model_config.identifier,
             contents=contents,
             config=types.GenerateContentConfig(
-                temperature=0.0,
+                temperature=self.model_config.temperature,
                 max_output_tokens=self.model_config.max_output_tokens,
             )
         )

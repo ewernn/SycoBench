@@ -6,7 +6,7 @@ from typing import List, Tuple, Optional
 import json
 from datetime import datetime
 
-from src.config import config, list_available_models, get_model_config
+from src.config import config, list_available_models, get_model_config, list_pressure_types
 from src.core.sycobench import SycoBench
 from src.core.evaluation import AdvancedSafetyEvaluator, SycophancyScorer
 from src.utils import setup_logging, console, create_progress_bar, BenchmarkLogger
@@ -28,9 +28,9 @@ def cli(log_level: str, log_file: Optional[str]):
 def list_models():
     """List all available models"""
     console.print("\n[bold cyan]Available Models:[/bold cyan]\n")
-    
+
     models = list_available_models()
-    
+
     # Group by provider
     providers = {}
     for key, model_config in models.items():
@@ -38,7 +38,7 @@ def list_models():
         if provider not in providers:
             providers[provider] = []
         providers[provider].append((key, model_config))
-    
+
     for provider, provider_models in providers.items():
         console.print(f"[bold yellow]{provider.upper()}:[/bold yellow]")
         for key, model_config in provider_models:
@@ -47,6 +47,24 @@ def list_models():
             console.print(f"    Cost: ${model_config.cost_per_1m_input}/{model_config.cost_per_1m_output} per 1M tokens")
             if model_config.supports_thinking:
                 console.print(f"    [green]✓ Supports thinking mode[/green]")
+        console.print()
+
+
+@cli.command()
+def list_pressure_types_cmd():
+    """List all available pressure types"""
+    console.print("\n[bold cyan]Available Pressure Types:[/bold cyan]\n")
+
+    pressure_types = list_pressure_types()
+
+    for key, phrases in pressure_types.items():
+        console.print(f"[bold yellow]{key}:[/bold yellow]")
+        if isinstance(phrases, list):
+            console.print(f"  Multi-level pressure ({len(phrases)} levels):")
+            for i, phrase in enumerate(phrases, 1):
+                console.print(f"    Level {i}: \"{phrase}\"")
+        else:
+            console.print(f"  Single-level: \"{phrases}\"")
         console.print()
 
 
@@ -82,8 +100,8 @@ def test(
         with open(question_file, 'r') as f:
             questions = [line.strip() for line in f if line.strip()]
     
-    # Initialize benchmark
-    bench = SycoBench()
+    # Initialize benchmark (no evaluation during testing)
+    bench = SycoBench(use_model_eval=False)
     logger = BenchmarkLogger(f"test_{model_key}")
     
     console.print(f"\n[bold cyan]Testing {model_key} with {len(questions)} question(s)[/bold cyan]\n")
@@ -161,11 +179,13 @@ def test(
 @click.option('--question-file', '-f', type=click.Path(exists=True), help='File with questions')
 @click.option('--use-defaults', is_flag=True, help='Use default safety questions')
 @click.option('--output-dir', '-o', type=click.Path(), help='Output directory for results')
+@click.option('--pressure-type', '-p', default=None, help='Pressure type to use (see list-pressure-types)')
 def benchmark(
     models: Tuple[str, ...],
     question_file: Optional[str],
     use_defaults: bool,
-    output_dir: Optional[str]
+    output_dir: Optional[str],
+    pressure_type: Optional[str]
 ):
     """Run comparative benchmark across multiple models"""
     
@@ -191,44 +211,40 @@ def benchmark(
     # Set output directory
     results_dir = Path(output_dir) if output_dir else config.results_dir
     
-    # Initialize benchmark
-    bench = SycoBench(results_dir=results_dir)
+    # Initialize benchmark (no evaluation during testing)
+    bench = SycoBench(results_dir=results_dir, use_model_eval=False)
     
     console.print(f"\n[bold cyan]Running comparative benchmark[/bold cyan]")
     console.print(f"Models: {', '.join([f'{t}:{k}' for t, k in model_specs])}")
     console.print(f"Questions: {len(questions)}\n")
     
-    # Run benchmark
+    # Run benchmark with async parallelism (20-40x faster)
     try:
-        result = bench.run_comparative_benchmark(
+        result = bench.run_comparative_benchmark_async(
             models=model_specs,
             questions=questions,
-            save_results=True
+            save_results=True,
+            pressure_type=pressure_type,
+            use_async=True  # Use async parallelism for speed
         )
-        
-        # Display comparative analysis
-        analysis = result.get("comparative_analysis", {})
-        
-        console.print("\n[bold cyan]Comparative Analysis:[/bold cyan]\n")
-        
-        if "safety_ranking" in analysis:
-            console.print("[bold]Safety Ranking:[/bold]")
-            for i, model in enumerate(analysis["safety_ranking"]):
-                scores = analysis["model_scores"].get(model, {})
-                console.print(f"{i+1}. {model}: {scores.get('safety_score', 0):.1f}% resistance")
-        
-        # Display cost summary
-        console.print("\n[bold cyan]Cost Summary by Model:[/bold cyan]")
-        total_cost = 0
-        for model_key, model_data in result.get("individual_results", {}).items():
-            if "statistics" in model_data:
-                stats = model_data["statistics"]
-                model_cost = stats.get("total_cost", 0)
-                total_cost += model_cost
-                console.print(f"{model_key}: ${model_cost:.4f} ({stats.get('total_tests', 0)} tests)")
-        
-        console.print(f"\n[bold]Total Cost: ${total_cost:.4f}[/bold]")
-        
+
+        # Display results from new structure
+        console.print("\n[bold green]✓ Experiment complete![/bold green]")
+        console.print(f"Experiment ID: {result['experiment_id']}")
+        console.print(f"Results saved to: {result['experiment_dir']}")
+
+        # Display summary if available
+        if "summary" in result:
+            summary = result["summary"]
+
+            # Display cost summary only (flip detection done later by scoring models)
+            console.print("\n[bold cyan]Cost Summary:[/bold cyan]")
+            console.print(f"Total Testing Cost: ${summary.get('total_testing_cost', 0):.4f}")
+
+            console.print("\n[bold cyan]Per-Model Costs:[/bold cyan]")
+            for model_key, model_data in summary.get("model_summaries", {}).items():
+                console.print(f"{model_key}: ${model_data.get('total_cost', 0):.4f}")
+
         console.print(f"\n[green]Full results saved to {results_dir}[/green]")
         
     except Exception as e:

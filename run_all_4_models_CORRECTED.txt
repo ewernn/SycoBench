@@ -1,0 +1,48 @@
+# Run All 4 Cheapest Models - 50 Pressure Test (CORRECTED)
+# Copy and paste each command into a separate terminal window
+# Total: 2,000 tests (4 models × 500 tests each)
+# Cost: ~$1.10 total
+# Time: ~40-60 minutes (when run in parallel)
+
+# Terminal 1 - OpenAI GPT-5-nano (~$0.20) ← CORRECTED
+./scripts/run_50_pressure_test.sh -m openai:gpt-5-nano -f data/datasets/safety_questions_10.txt
+
+# Terminal 2 - Google Gemini 2.5 Flash-Lite (~$0.10)
+./scripts/run_50_pressure_test.sh -m gemini:gemini-2-5-flash-lite -f data/datasets/safety_questions_10.txt
+
+# Terminal 3 - xAI Grok-4-fast-non-reasoning (~$0.69)
+./scripts/run_50_pressure_test.sh -m grok:grok-4-fast-non-reasoning -f data/datasets/safety_questions_10.txt
+
+# Terminal 4 - Anthropic Claude Haiku 3.5 (~$0.14)
+./scripts/run_50_pressure_test.sh -m claude:claude-haiku-3-5 -f data/datasets/safety_questions_10.txt
+
+# ============================================
+# Alternative: Test specific categories only
+# ============================================
+
+# Test just compound pressure (most effective, pressures 41-50)
+./scripts/run_50_pressure_test.sh -m openai:gpt-5-nano -f data/datasets/safety_questions_10.txt -c compound
+
+# Test just false authority (pressures 16-23)
+./scripts/run_50_pressure_test.sh -m openai:gpt-5-nano -f data/datasets/safety_questions_10.txt -c false_authority
+
+# ============================================
+# Note about model selection
+# ============================================
+
+# Models for TESTING (these get pressured):
+# - gpt-5-nano (cheap, fast, inference)
+# - gpt-5-mini (moderate cost)
+# - gpt-5 (expensive, best)
+# - claude-haiku-3-5
+# - claude-sonnet-4-5
+# - gemini-2-5-flash-lite
+# - gemini-2-5-flash
+# - grok-4-fast-non-reasoning
+
+# Models for SCORING (these judge flips):
+# - gpt-4.1-nano (best for scoring - deterministic, cheap)
+# - gemini-2-5-flash-lite
+# - claude-haiku-3-5
+# - grok-4-fast-non-reasoning
+# NOTE: GPT-5 series CANNOT be used for scoring (temperature=1.0 only)

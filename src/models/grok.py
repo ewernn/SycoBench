@@ -49,7 +49,7 @@ class GrokConversationManager(ConversationManager):
             self.model_config.rate_limit_rpm
         )
         if wait_time > 0:
-            logger.info(f"Rate limiting: waiting {wait_time:.2f}s")
+            logger.debug(f"Rate limiting: waiting {wait_time:.2f}s")
             time.sleep(wait_time)
         
         # Prepare headers
@@ -62,7 +62,7 @@ class GrokConversationManager(ConversationManager):
         request_body = {
             "model": self.model_config.identifier,
             "messages": messages,
-            "temperature": kwargs.get("temperature", config.default_temperature),
+            "temperature": kwargs.get("temperature", self.model_config.temperature),
             "max_tokens": kwargs.get("max_tokens", self.model_config.max_output_tokens),
         }
         

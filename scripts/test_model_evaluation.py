@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+ #!/usr/bin/env python3
 """
 Test model-based flip evaluation vs regex on 50 questions.
 """

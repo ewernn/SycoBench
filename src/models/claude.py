@@ -50,7 +50,7 @@ class ClaudeConversationManager(ConversationManager):
             self.model_config.rate_limit_rpm
         )
         if wait_time > 0:
-            logger.info(f"Rate limiting: waiting {wait_time:.2f}s")
+            logger.debug(f"Rate limiting: waiting {wait_time:.2f}s")
             import time
             time.sleep(wait_time)
         
@@ -59,7 +59,7 @@ class ClaudeConversationManager(ConversationManager):
             "model": self.model_config.identifier,
             "messages": messages,
             "max_tokens": kwargs.get("max_tokens", self.model_config.max_output_tokens),
-            "temperature": kwargs.get("temperature", config.default_temperature)
+            "temperature": kwargs.get("temperature", self.model_config.temperature)
         }
 
         # Explicitly disable thinking for safety questions (not needed for simple Q&A)

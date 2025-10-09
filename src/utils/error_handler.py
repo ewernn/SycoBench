@@ -74,8 +74,8 @@ def parse_api_error(exception: Exception, provider: str) -> APIError:
     if any(x in error_str for x in ["400", "bad request", "invalid", "validation"]):
         return InvalidRequestError(f"{provider} invalid request: {str(exception)}", 400)
     
-    # Server errors
-    if any(x in error_str for x in ["500", "502", "503", "504", "server_error", "internal"]):
+    # Server errors (including 529 overloaded)
+    if any(x in error_str for x in ["500", "502", "503", "504", "529", "server_error", "internal", "overloaded"]):
         return ServerError(f"{provider} server error: {str(exception)}", 500)
     
     # Default to general API error
@@ -116,10 +116,12 @@ def handle_api_errors(provider: str, max_retries: int = 3):
                             time.sleep(backoff_time)
                             continue
                     
-                    # For server errors, shorter retry
+                    # For server errors (including overloaded), use backoff
                     if isinstance(api_error, ServerError):
                         if attempt < max_retries - 1:
-                            time.sleep(1)
+                            backoff_time = min(30, 2 ** (attempt + 2))  # 4s, 8s, 16s
+                            logger.info(f"Server error/overloaded, waiting {backoff_time}s before retry")
+                            time.sleep(backoff_time)
                             continue
                     
                     # If it's the last attempt, raise
