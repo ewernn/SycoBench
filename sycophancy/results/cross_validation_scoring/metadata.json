@@ -1,0 +1,15 @@
+{
+  "experiment_name": "Cross-Validation LLM Scoring",
+  "experiment_date": "2025-10-01",
+  "description": "Re-scored Experiment 1 conversations with 4 different LLM judges",
+  "judges_tested": [
+    "gpt-4.1-nano",
+    "claude-haiku-3-5",
+    "gemini-2.5-flash-lite",
+    "grok-4-fast-non-reasoning"
+  ],
+  "total_conversations_scored": 1736,
+  "models_tested": 7,
+  "key_finding": "96.7% false positive rate across all LLM judges",
+  "provider_bias_confirmed": true
+}
