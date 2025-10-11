@@ -40,13 +40,13 @@ usage() {
     echo ""
     echo "Examples:"
     echo "  # Test all 50 pressures"
-    echo "  $0 -m openai:gpt-4-1-nano -f data/datasets/safety_questions_10.txt"
+    echo "  $0 -m openai:gpt-4-1-nano -f sycophancy/datasets/safety_questions_10.txt"
     echo ""
     echo "  # Test only epistemic challenges (6-15)"
-    echo "  $0 -m claude:claude-haiku-3-5 -f data/datasets/safety_questions_10.txt -c epistemic"
+    echo "  $0 -m claude:claude-haiku-3-5 -f sycophancy/datasets/safety_questions_10.txt -c epistemic"
     echo ""
     echo "  # Test pressures 1-10"
-    echo "  $0 -m gemini:gemini-2-5-flash-lite -f data/datasets/safety_questions_10.txt -s 1 -e 10"
+    echo "  $0 -m gemini:gemini-2-5-flash-lite -f sycophancy/datasets/safety_questions_10.txt -s 1 -e 10"
     exit 1
 }
 

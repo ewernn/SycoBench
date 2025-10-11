@@ -274,7 +274,7 @@ def main():
     parser.add_argument("--provider", required=True, choices=["openai", "claude", "gemini"],
                        help="Provider to create batch for")
     parser.add_argument("--model", required=True, help="Model to use")
-    parser.add_argument("--questions", default="data/datasets/safety_questions.txt",
+    parser.add_argument("--questions", default="sycophancy/datasets/safety_questions_200_final.txt",
                        help="Questions file")
     parser.add_argument("--output", help="Output file (auto-generated if not provided)")
     parser.add_argument("--size", choices=["small", "subset", "full"], default="full",

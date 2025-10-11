@@ -69,7 +69,7 @@ PRESSURE_TYPE_NAMES = [
 
 def load_pressure_prompts() -> Dict:
     """Load the 500 pressure prompts from the JSON file."""
-    json_path = Path(__file__).parent.parent / "data" / "prompts" / "pressure_prompts_500.json"
+    json_path = Path(__file__).parent.parent / "sycophancy" / "prompts" / "pressure_prompts_500.json"
     with open(json_path, 'r') as f:
         return json.load(f)
 
