@@ -4,13 +4,15 @@
 
 SycoBench tests AI models for sycophantic behavior on safety-critical questions. It applies pressure to models after they give safe advice, testing if they maintain their position or flip to unsafe advice.
 
-**NEW: 50-Pressure Testing** - Test with 50 sophisticated, question-specific pressure tactics instead of 5 generic ones. See [50-Pressure Testing](#50-pressure-testing-framework-recommended).
+**NEW: 50-Pressure Testing** - Test with 50 sophisticated, question-specific pressure tactics instead of 5 generic ones. See `QUICK_START_50_PRESSURES.md` or jump to [50-Pressure Testing](#50-pressure-testing-framework-recommended).
 
 ## Core Architecture
 
 ### Entry Points
 - `sycobench.py` - Main CLI interface
 - `src/cli.py` - Command-line argument processor
+- `examples/basic_benchmark.py` - Quick start example
+- `scripts/benchmark_sample.py` - Sample testing script
 
 ### Core Components
 ```
@@ -73,10 +75,11 @@ cp .env.example .env
 # Test API connectivity
 python tests/test_api_connectivity.py --provider all
 
-# Quick test with 50 pressure tactics
-./scripts/run_50_pressure_test.sh \
-    -m openai:gpt-4-1-nano \
-    -f sycophancy/datasets/safety_questions_10.txt
+# Run sample benchmark
+python scripts/benchmark_sample.py
+
+# Run basic example
+python examples/basic_benchmark.py
 ```
 
 ### 50-Pressure Testing (Recommended)
@@ -100,7 +103,7 @@ python3.11 scripts/analyze_50_pressure_results.py \
     results/50_pressure_test/gpt-4-1-nano_TIMESTAMP
 ```
 
-**See:** `docs/50_PRESSURE_TESTING.md` for full guide
+**See:** `QUICK_START_50_PRESSURES.md` for full guide
 
 ### CLI Usage (Original 5-Pressure System)
 ```bash
@@ -118,7 +121,7 @@ python3.11 -m src.cli benchmark \
   -m claude:claude-opus-4-1 \
   -f sycophancy/datasets/safety_questions_200_final.txt
 
-# Results saved to: sycophancy/results/YYYY-MM-DD_provider_3models_248q_false-authority/
+# Results saved to: results/YYYY-MM-DD_provider_3models_248q_false-authority/
 # - model_responses/{model-key}.json (raw conversations, one per model)
 # - metadata.json (experiment config)
 # - summary.json (costs and token counts only - no flip detection yet)
@@ -621,8 +624,9 @@ comparison = scorer.compare_models(model_results)
 **Note**: No flip detection during testing. Raw conversations are saved for later analysis by scoring models.
 
 ### Analysis Reports
-- `sycophancy/results/README.md` - Comprehensive experimental findings
-- `sycophancy/results/graphs/` - Key visualizations
+- `results/analysis_reports/cross_company_sycophancy_analysis.md`
+- `results/analysis_reports/FINAL_RESULTS_SUMMARY.md`
+- `results/sycobench_results_visualization.png`
 
 ## Cost Management
 
@@ -728,17 +732,23 @@ with create_progress_bar("Testing") as progress:
 ## Data Files
 
 ### Question Sets
-- `sycophancy/datasets/safety_questions_10.txt` - 10 core questions
-- `sycophancy/datasets/safety_questions_200_final.txt` - Main dataset (200 questions)
-- `sycophancy/datasets/safety_questions_200_cold_start_social_pressure.txt` - Embedded pressure
+- `sycophancy/datasets/safety_questions.txt` - 10 core questions
+- `sycophancy/datasets/safety_questions_1000.txt` - Full benchmark set
+
+### Batch Data
+```
+batch_data/
+├── claude/      # Claude batch files and results
+├── gemini/      # Gemini batch files
+├── openai/      # OpenAI batch files
+└── results/     # Processed batch results
+```
 
 ### Results Storage
 ```
 sycophancy/
 ├── datasets/                  # Question files
 ├── prompts/                   # Pressure prompts
-│   ├── pressure_prompts_500.json
-│   └── pressure_categories.json
 └── results/                   # Experimental results
     ├── initial_benchmark/     # 7 models × 248 questions
     ├── cross_validation_scoring/  # 4 LLM judges comparison
@@ -760,20 +770,18 @@ sycophancy/
 
 ### Testing
 - `tests/test_api_connectivity.py` - Test API connections
-- `scripts/run_50_pressure_test.sh` - Main 50-pressure test runner
-- `scripts/run_cold_start_test.sh` - Cold-start test runner
+- `scripts/benchmark_sample.py` - Quick sample test
+- `examples/basic_benchmark.py` - Example implementation
 
 ### Batch Tools
-- `scripts/submit_openai_batch.py` - Submit OpenAI batches
-- `scripts/check_openai_batches.py` - Check batch status
-- `scripts/cost_analysis.py` - Analyze costs
+- `tools/submit_openai_batch.py` - Submit OpenAI batches
+- `tools/check_openai_batches.py` - Check batch status
+- `tools/monitor_batch.py` - Monitor batch progress
+- `tools/cost_analysis.py` - Analyze costs
 
-### Scoring & Analysis Tools
-- `scripts/score_50_pressures_standalone.py` - Automated LLM scoring
-- `scripts/score_cold_start_tests.py` - Score cold-start tests
-- `scripts/manual_score_50_pressures.py` - Manual scoring interface
-- `scripts/review_detected_flips.py` - Review detected flips
+### Analysis Tools
 - `src/analysis/visualizer.py` - Generate visualizations
+- `tools/create_batch_subset.py` - Create test subsets
 
 ## Model Support and Pricing (September 30, 2025)
 
@@ -868,35 +876,26 @@ sycophancy/
 - Manual (human review): 0-5 real flips per model (0-1.0%)
 - False Positive Rate: 76-100% depending on model politeness
 
-See individual model reports in `sycophancy/results/pressure_deep/` for detailed manual review documentation.
+See individual model reports in `results/50_pressure_test/` for detailed manual review documentation.
 
 ## Development
 
 ### Project Structure
 ```
 SycoBench/
-├── src/                    # Source code
-│   ├── core/              # Core functionality
-│   │   ├── sycobench.py           # Sync orchestrator
-│   │   ├── sycobench_async.py     # Async orchestrator (20x faster)
-│   │   ├── evaluation.py          # Safety evaluation
-│   │   └── conversation_manager.py
-│   ├── models/            # Model implementations (sync + async)
-│   ├── batch/             # Batch processing
-│   ├── analysis/          # Analysis tools
-│   ├── utils/             # Utilities
-│   ├── config.py          # Model configurations
-│   ├── config_50_pressures.py  # 500 pressure prompts
-│   └── cli.py             # CLI interface
-├── sycophancy/            # Experimental data
-│   ├── datasets/          # Question files
-│   ├── prompts/           # Pressure tactics
-│   └── results/           # Test results & analysis
-├── scripts/               # Test runners & tools
-├── docs/                  # Documentation
-├── tests/                 # Framework tests
-├── sycobench.py          # Main entry point
-└── setup.py              # Package installation
+├── src/              # Source code
+│   ├── core/        # Core functionality
+│   ├── models/      # Model implementations
+│   ├── batch/       # Batch processing
+│   ├── analysis/    # Analysis tools
+│   └── utils/       # Utilities
+├── data/            # Question datasets
+├── batch_data/      # Batch files
+├── results/         # Test results
+├── docs/            # Documentation
+├── tests/           # Test files
+├── tools/           # Utility scripts
+└── examples/        # Example code
 ```
 
 ### Adding New Models
@@ -936,7 +935,10 @@ model.rate_limit_rpm = 30  # Lower limit
 **Batch Failures**
 ```bash
 # Check batch status
-python scripts/check_openai_batches.py
+python tools/check_openai_batches.py
+
+# Resume from partial results
+python tools/create_batch_subset.py --start 500
 ```
 
 **Memory Issues**
@@ -986,10 +988,10 @@ for chunk in range(0, 1000, 100):
 4. ✅ **Use the manual review tools:**
    ```bash
    # Interactive flip reviewer
-   python3.11 scripts/review_detected_flips.py sycophancy/results/pressure_deep/model_TIMESTAMP
+   python3.11 scripts/review_detected_flips.py results/50_pressure_test/model_TIMESTAMP
 
    # Manual scoring interface
-   python3.11 scripts/manual_score_50_pressures.py sycophancy/results/pressure_deep/model_TIMESTAMP
+   python3.11 scripts/manual_score_50_pressures.py results/50_pressure_test/model_TIMESTAMP
    ```
 
 5. ✅ **Sample size for validation:**
