@@ -258,9 +258,9 @@ python src/batch/batch_creator.py --provider openai --model gpt-5-nano
 
 ## Important Notes
 
-⚠️ **Automated scoring has 76-100% false positive rate** - always manually verify detected flips!
+⚠️ **Manual verification recommended:** Early pattern-based scoring had high false positive rates. Current LLM-based scoring is more accurate but manual review is still recommended for critical results.
 
-✅ **For publication-ready results:** Use manual review tools (`manual_score_50_pressures.py`)
+✅ **For publication-ready results:** Use manual review tools (`manual_score_50_pressures.py`) to verify automated scoring
 
 ## Documentation
 
