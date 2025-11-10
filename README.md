@@ -313,3 +313,8 @@ MIT License - See LICENSE file
   url = {https://github.com/ewernn/SycoBench}
 }
 ```
+
+
+## for future might be helpful
+
+pypi's petri for automated multi-turn convos/pressure
